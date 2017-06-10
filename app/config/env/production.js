@@ -10,7 +10,7 @@ module.exports = {
     username: 'mooc1988',
     password: 'Mooc1988',
     config: {
-      host: 'rm-8vbk61x7h0vwb7oe1.pgsql.zhangbei.rds.aliyuncs.com',
+      host: "rdsfom58rh8q9mrl8885.pg.rds.aliyuncs.com",
       port: 3433,
       dialect: 'postgres'
     }

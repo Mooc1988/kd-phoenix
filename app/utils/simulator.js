@@ -2,34 +2,33 @@
  * Created by frank on 2017/6/7.
  */
 const _ = require('lodash')
+const quotas = require('./quotas')
+
 module.exports = {
+
   /**
-   * 计算元素间隔
-   * @param predicate
+   *
    * @param list
+   * @param quota
+   * @param target
    * @returns {Array}
    */
-  executeSeq(predicate, list){
-    predicate = _.isFunction(predicate) ? predicate : (x) => x === predicate
+  executeSeq(list, quota, target){
     let result = []
     let duration = 0
-    let started = false
-    let last = list.length - 1
-    _.forEach(list, (el, index) => {
-      if (predicate(el)) {
-        if (started) {
-          result.push(duration)
-          duration = 0
-        } else {
-          started = true
-        }
-      } else if (started) {
+    let quotaHandler = quotas[quota]
+    if (!quotaHandler) throw new Error(`invalid quota: ${quota}`)
+    _.forEach(list, function processMatch (match) {
+      if (quotaHandler(match, target)) {
+        result.push(duration)
+        duration = 0
+      } else {
         duration += 1
-        if (index === last) {
-          result.push(duration)
-        }
       }
     })
+    if (duration > 0) {
+      result.push(duration)
+    }
     return result
   }
 }

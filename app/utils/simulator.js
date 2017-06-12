@@ -14,7 +14,8 @@ module.exports = {
     let result = []
     let duration = 0
     let started = false
-    _.forEach(list, el => {
+    let last = list.length - 1
+    _.forEach(list, (el, index) => {
       if (predicate(el)) {
         if (started) {
           result.push(duration)
@@ -24,6 +25,9 @@ module.exports = {
         }
       } else if (started) {
         duration += 1
+        if (index === last) {
+          result.push(duration)
+        }
       }
     })
     return result

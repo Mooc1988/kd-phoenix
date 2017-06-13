@@ -57,7 +57,7 @@ module.exports = {
         ranges[index] += 1
       }
     }
-    if (quotaHandler(_.last(matches), target)) {
+    if (quotaHandler(matches[0], target)) {
       ranges[1] = 'x'
     }
     return ranges

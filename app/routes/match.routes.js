@@ -18,7 +18,7 @@ module.exports = {
     {
       path: '/lastRanges',
       method: 'GET',
-      handler: 'Match.getLastScoreStateRange'
+      handler: 'Match.getLastRanges'
     },
     {
       path: '/dateRange',

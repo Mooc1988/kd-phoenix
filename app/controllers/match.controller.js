@@ -8,7 +8,7 @@ const simulator = require('../utils/simulator')
 
 module.exports = {
   async findAll(ctx){
-    let {seq, begin, end} = ctx.query
+    let {seq, dateRange} = ctx.query
     let {Match} = ctx.models
     ctx.assert(seq, 400, 'seq required')
     let where = {seq}
@@ -40,24 +40,8 @@ module.exports = {
     }
     let order = [['matchDate']]
     let matches = await Match.findAll({where, order})
-    ctx.body = simulator.executeSeq(matches, quota, target)
-  },
-
-  async getLastScoreStateRange (ctx) {
-    let {seq} = ctx.query
-    let {Match} = ctx.models
-    let where = {seq, scoreState: 'A'}
-    let attributes = ['scoreState', 'matchDate']
-    let order = [['matchDate', 'DESC']]
-    let matches = await Match.findAll({where, attributes, order, limit: 1})
-    let ret = {range: 0}
-    if (!_.isEmpty(matches)) {
-      let {matchDate} = matches[0]
-      let where = {seq, scoreState: 'B', matchDate: {$gt: matchDate}}
-      ret.range = await Match.count({where, order})
-      ret.startDate = moment(matchDate).format('YYYY-MM-DD')
-    }
-    ctx.body = ret
+    let {ranges, growing} = simulator.executeRanges(matches, quota, target)
+    ctx.body = ranges
   },
 
   async getSeqDateRange(ctx){
@@ -74,6 +58,34 @@ module.exports = {
     let startDate = moment(start.matchDate).format('YYYY-MM-DD')
     let endDate = moment(end.matchDate).format('YYYY-MM-DD')
     ctx.body = {startDate, endDate}
+  },
 
+  // 计算指标最后间隔
+  async getLastRanges(ctx){
+    let quotas = {
+      'scoreState': ['A', 'B'],
+      'sfResult': [1],
+      'sfOddsHl': ['M'],
+      'rqResult': [1],
+      'rqOddsHl': ['M']
+    }
+    let {seq} = ctx.query
+    let where = {seq}
+    let attributes = ['scoreState', 'sfResult', 'sfOddsHl', 'rqResult', 'rqOddsHl', 'matchDate']
+    let order = [['matchDate', 'DESC']]
+    let {Match} = ctx.models
+    let matches = await Match.findAll({where, attributes, order, limit: 70})
+    let ret = {}
+    _.forEach(quotas, (targets, quota) => {
+      ret[quota] = []
+      _.forEach(targets, target => {
+        let ranges = simulator.executeLast2Ranges(matches, quota, target)
+        ret[quota].push({
+          target, ranges
+        })
+      })
+    })
+    ctx.body = ret
   }
+
 }

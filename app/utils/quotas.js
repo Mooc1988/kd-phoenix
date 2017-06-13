@@ -11,7 +11,7 @@ module.exports = {
 
   rqOddsHl: ({rqOddsHl}, target) => rqOddsHl === target,
 
-  sfResult: ({sfResult}, target) => _.toString(sfResult) === target,
+  sfResult: ({sfResult}, target) => sfResult === parseInt(target),
 
-  rqResult: ({rqResult}, target) => _.toString(rqResult) === target
+  rqResult: ({rqResult}, target) => rqResult === parseInt(target)
 }

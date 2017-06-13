@@ -13,22 +13,54 @@ module.exports = {
    * @param target
    * @returns {Array}
    */
-  executeSeq(list, quota, target){
-    let result = []
+  executeRanges(list, quota, target){
+    let ranges = []
     let duration = 0
     let quotaHandler = quotas[quota]
-    if (!quotaHandler) throw new Error(`invalid quota: ${quota}`)
+    let growing = false
+    if (!quotaHandler) {
+      throw new Error(`invalid quota: ${quota}`)
+    }
     _.forEach(list, function processMatch (match) {
       if (quotaHandler(match, target)) {
-        result.push(duration)
+        ranges.push(duration)
         duration = 0
       } else {
         duration += 1
       }
     })
     if (duration > 0) {
-      result.push(duration)
+      ranges.push(duration)
+      growing = true
     }
-    return result
+    return {ranges, growing}
+  },
+
+  executeLast2Ranges(matches, quota, target){
+    let quotaHandler = quotas[quota]
+    if (!quotaHandler) {
+      throw new Error(`invalid quota: ${quota}`)
+    }
+    let ranges = [0, 0]
+    let matchLength = matches.length
+    // 记录target出现的次数
+    let times = 0
+    for (let i = 0; i < matchLength; i++) {
+      let match = matches[i]
+      if (quotaHandler(match, target)) {
+        times += 1
+        if (times >= 2) {
+          break
+        }
+      } else {
+        let index = times === 0 ? 1 : 0
+        ranges[index] += 1
+      }
+    }
+    if (quotaHandler(_.last(matches), target)) {
+      ranges[1] = 'x'
+    }
+    return ranges
   }
+
 }

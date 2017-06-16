@@ -11,6 +11,11 @@ module.exports = {
       handler: 'Match.findAll'
     },
     {
+      path: '/seqs/:seq',
+      method: 'GET',
+      handler: 'Match.findAllBySeq'
+    },
+    {
       path: '/ranges',
       method: 'GET',
       handler: 'Match.executeRange'

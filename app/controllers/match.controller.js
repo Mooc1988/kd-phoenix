@@ -22,6 +22,34 @@ module.exports = {
     ctx.body = await Match.findAll({where, order})
   },
 
+  async findAllBySeq(ctx){
+    let {seq} = ctx.params
+    let where = {seq}
+    let {start, end} = ctx.query
+    if (start) {
+      where.matchDate = {
+        $gte: start
+      }
+    }
+    if (end) {
+      where.matchDate = {
+        $lte: end
+      }
+    }
+    let {Match} = ctx.models
+    let attributes = ['scoreState', 'pScore', 'gScore', 'sfResult', 'sfOddsHl', 'rqResult', 'rqOddsHl', 'rqScore', 'matchDate']
+    let order = [['matchDate']]
+    let matches = await Match.findAll({where, order, attributes})
+    let res = []
+    _.forEach(matches, m => {
+      let match = m.toJSON()
+      match.matchDate = moment(match.matchDate).format('YYYY-MM-DD')
+      match.winState = simulator.executeWinState(match)
+      res.push(match)
+    })
+    ctx.body = matches
+  },
+
   /**
    * 计算间隔
    * @param ctx
@@ -40,8 +68,7 @@ module.exports = {
     }
     let order = [['matchDate']]
     let matches = await Match.findAll({where, order})
-    let {ranges, growing} = simulator.executeRanges(matches, quota, target)
-    ctx.body = ranges
+    ctx.body = simulator.executeRanges(matches, quota, target)
   },
 
   async getSeqDateRange(ctx){

@@ -61,6 +61,29 @@ module.exports = {
       ranges[1] = 'x'
     }
     return ranges
+  },
+  executeWinState(match) {
+    //1 0 -1
+    let {pScore, gScore, rqScore} = match
+    //平
+    if (pScore === gScore) {
+      return 'D'
+    }
+    let [weak, strong] = rqScore > 0 ? [pScore, gScore] : [gScore, pScore]
+
+    // 冷
+    if (weak > strong) {
+      return 'C'
+    }
+    // 让平
+    if (strong - Math.abs(rqScore) === weak) {
+      return 'B'
+    }
+    // 打穿
+    if (strong - Math.abs(rqScore) > weak) {
+      return 'A'
+    }
+    return 'X'
   }
 
 }

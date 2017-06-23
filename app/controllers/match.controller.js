@@ -71,20 +71,17 @@ module.exports = {
     ctx.body = simulator.executeRanges(matches, quota, target)
   },
 
-  async getSeqDateRange(ctx){
+  async getLastUpdateDate(ctx){
     let {seq} = ctx.query
-    let order = [['matchDate', 'DESC']]
-    let attributes = ['matchDate']
     let where = {seq}
+    ctx.assert(seq, 400, 'seq params required')
+    let attributes = ['matchDate']
+    let order = [['matchDate', 'DESC']]
     let {Match} = ctx.models
     let matches = await Match.findAll({where, attributes, order, limit: 1})
-    let end = matches[0]
-    order = [['matchDate']]
-    matches = await Match.findAll({where, attributes, order, limit: 1})
-    let start = matches[0]
-    let startDate = moment(start.matchDate).format('YYYY-MM-DD')
-    let endDate = moment(end.matchDate).format('YYYY-MM-DD')
-    ctx.body = {startDate, endDate}
+    ctx.assert(matches.length > 0, 400, '比赛不存在')
+    let updateDate = moment(matches[0].matchDate).format('YYYY-MM-DD')
+    ctx.body = {updateDate}
   },
 
   // 计算指标最后间隔
@@ -92,9 +89,9 @@ module.exports = {
     let quotas = {
       'scoreState': ['A', 'B'],
       'sfResult': [1],
-      'sfOddsHl': ['M'],
+      'sfOddsHl': ['M', 'H'],
       'rqResult': [1],
-      'rqOddsHl': ['M']
+      'rqOddsHl': ['M', 'H']
     }
     let {seq} = ctx.query
     let where = {seq}

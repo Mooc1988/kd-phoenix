@@ -37,6 +37,10 @@ module.exports = {
   sfResult: ({sfResult}, target) => sfResult === parseInt(target),
 
   rqResult: ({rqResult}, target) => rqResult === parseInt(target),
+
+  doubleM: ({sfOddsHl, rqOddsHl}, target) => sfOddsHl === 'M' || rqOddsHl === 'M',
+  rqpM: ({sfOddsHl, rqResult}, target) => sfOddsHl === 'M' || rqResult === 1,
+
   winState: function (match, target) {
     return executeWinState(match) === target
   }

@@ -26,9 +26,9 @@ module.exports = {
       handler: 'Match.getLastRanges'
     },
     {
-      path: '/dateRange',
+      path: '/lastUpdateDate',
       method: 'GET',
-      handler: 'Match.getSeqDateRange'
+      handler: 'Match.getLastUpdateDate'
     }
   ]
 }

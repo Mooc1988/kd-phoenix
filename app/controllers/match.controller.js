@@ -45,6 +45,7 @@ module.exports = {
       let match = m.toJSON()
       match.matchDate = moment(match.matchDate).format('YYYY-MM-DD')
       match.winState = simulator.executeWinState(match)
+      match.totalScore = match.pScore + match.gScore
       res.push(match)
     })
     ctx.body = matches

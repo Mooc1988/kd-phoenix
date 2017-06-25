@@ -12,7 +12,7 @@
     "ioredis": "^3.1.1",
     "jsonwebtoken": "^7.4.1",
     "kcors": "^2.2.1",
-    "koa": "^2.2.0",
+    "koa": "^2.3.0",
     "koa-bodyparser": "^4.2.0",
     "koa-joi-router": "^5.0.0",
     "koa-jwt": "^3.2.2",
@@ -20,10 +20,10 @@
     "koa-static": "^3.0.0",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
-    "pg": "^6.2.3",
+    "pg": "^6.4.0",
     "pg-hstore": "^2.3.2",
     "phantom": "^4.0.4",
-    "sequelize": "^3.30.4",
+    "sequelize": "^4.2.0",
     "socket.io": "^2.0.3"
   },
   "devDependencies": {

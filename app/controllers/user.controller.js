@@ -19,7 +19,7 @@ module.exports = {
     user.salt = Date.now().toString()
     user.password = user.hashPassword(password)
     await user.save()
-    ctx.status = 201
+    ctx.body = user
   },
 
   // 登陆

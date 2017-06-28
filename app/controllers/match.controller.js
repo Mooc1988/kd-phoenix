@@ -37,15 +37,14 @@ module.exports = {
       }
     }
     let {Match} = ctx.models
-    let attributes = ['scoreState', 'pScore', 'gScore', 'sfResult', 'sfOddsHl', 'rqResult', 'rqOddsHl', 'rqScore', 'matchDate']
     let order = [['matchDate']]
-    let matches = await Match.findAll({where, order, attributes})
+    let matches = await Match.findAll({where, order})
     let res = []
     _.forEach(matches, m => {
       let match = m.toJSON()
       match.matchDate = moment(match.matchDate).format('YYYY-MM-DD')
-      match.winState = simulator.executeWinState(match)
       match.totalScore = match.pScore + match.gScore
+      match.allScore = match.pScore > 0 && match.gScore > 0
       res.push(match)
     })
     ctx.body = matches
@@ -88,7 +87,7 @@ module.exports = {
   // 计算指标最后间隔
   async getLastRanges(ctx){
     let quotas = {
-      'scoreState': ['A', 'B'],
+      'scoreState': ['奇', '偶'],
       'sfResult': [1],
       'sfOddsHl': ['M', 'H'],
       'rqResult': [1],

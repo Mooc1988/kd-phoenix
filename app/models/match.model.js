@@ -18,6 +18,26 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false,
       comment: '比赛周'
     },
+    pTeam: {
+      type: STRING,
+      field: 'p_team',
+      comment: '主队'
+    },
+    gTeam: {
+      type: STRING,
+      field: 'g_team',
+      comment: '客队'
+    },
+    pTeamLink: {
+      type: STRING,
+      field: 'p_team_link',
+      comment: '主队链接'
+    },
+    gTeamLink: {
+      type: STRING,
+      field: 'g_team_link',
+      comment: '客队链接'
+    },
     pScore: {
       type: INTEGER,
       field: 'p_score',
@@ -27,6 +47,10 @@ module.exports = function (sequelize, DataTypes) {
       type: INTEGER,
       field: 'g_score',
       comment: '客队得分'
+    },
+    winState: {
+      type: STRING,
+      field: 'win_state'
     },
     state: {
       type: STRING,

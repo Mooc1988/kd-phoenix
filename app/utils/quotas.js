@@ -18,6 +18,11 @@ module.exports = {
 
   rqpM: ({sfOddsHl, rqResult}, target) => sfOddsHl === 'M' || rqResult === 1,
 
-  winState: ({winState}, target) => winState === target
+  winState: ({winState}, target) => winState === target,
+
+  allScore: ({pScore, gScore}, target) => {
+    let isAll = pScore > 0 && gScore > 0
+    return target === '是' ? isAll : !isAll
+  }
 
 }

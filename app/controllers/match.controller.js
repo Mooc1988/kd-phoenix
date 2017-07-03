@@ -25,7 +25,7 @@ module.exports = {
   async findAllBySeq(ctx){
     let {seq} = ctx.params
     let where = {seq}
-    let {start, end} = ctx.query
+    let {start, end, week} = ctx.query
     if (start) {
       where.matchDate = {
         $gte: start
@@ -35,6 +35,9 @@ module.exports = {
       where.matchDate = {
         $lte: end
       }
+    }
+    if (week) {
+      where.week = week
     }
     let {Match} = ctx.models
     let order = [['matchDate']]

@@ -121,20 +121,22 @@ module.exports = {
       return reject(new Error('超时'))
     }
     for (match of resp[1]['已完场']) {
-      let {forecast, host_half, away_score, match_id, match_sn} = match
+      let {forecast, host_score, away_score, match_id, match_sn} = match
       let tmp = forecast.split(',')
+      host_score = parseInt(host_score)
+      away_score = parseInt(away_score)
       let matchResult = '1'
-      if (host_half > away_score) {
+      if (host_score > away_score) {
         matchResult = '3'
-      } else if (host_half < away_score) {
+      } else if (host_score < away_score) {
         matchResult = '0'
       }
       let isOk = tmp.includes(matchResult)
+      console.log(match_id, matchResult, tmp, isOk)
       let ret = {uid: match_id, seq: match_sn, isHit: isOk}
       matches.push(ret)
     }
     for (let match of matches) {
-      console.log(match)
       let {uid, isHit} = match
       await Match.update({isHit}, {where: {uid}})
     }

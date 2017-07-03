@@ -29,6 +29,11 @@ module.exports = {
       path: '/lastUpdateDate',
       method: 'GET',
       handler: 'Match.getLastUpdateDate'
+    },
+    {
+      path: '/curlCaiqr',
+      method: 'POST',
+      handler: 'Match.curlCaiqr'
     }
   ]
 }

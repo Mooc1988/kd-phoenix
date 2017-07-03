@@ -110,6 +110,20 @@ module.exports = {
       })
     })
     ctx.body = ret
+  },
+
+  async curlCaiqr(ctx){
+    let {cmd} = ctx.request.body
+    ctx.assert(cmd, 400, 'cmd参数不足')
+    let {Match} = ctx.models
+    let {Curl} = ctx.services
+    let matches = await Curl.curl(cmd)
+    for (let match of matches) {
+      console.log(match)
+      let {uid, isHit} = match
+      await Match.update({isHit}, {where: {uid}})
+    }
+    ctx.body = 'ok'
   }
 
 }

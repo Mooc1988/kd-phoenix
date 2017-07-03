@@ -1,7 +1,7 @@
 'use strict'
 const crypto = require('crypto')
 module.exports = function (sequelize, DataTypes) {
-  const {STRING, INTEGER, FLOAT, ARRAY, DATEONLY} = DataTypes
+  const {STRING, INTEGER, FLOAT, ARRAY, DATEONLY, BOOLEAN} = DataTypes
   return sequelize.define('Match', {
     seq: {
       type: INTEGER,
@@ -100,6 +100,9 @@ module.exports = function (sequelize, DataTypes) {
       type: DATEONLY,
       field: 'match_date',
       comment: '比赛日期'
+    },
+    isHit: {
+      type: BOOLEAN
     }
   }, {
     tableName: 'match',

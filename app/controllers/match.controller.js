@@ -53,13 +53,44 @@ module.exports = {
     ctx.body = matches
   },
 
+  async oddsRange(ctx){
+    let {target} = ctx.query
+    let seqs = ctx.query['seqs[]']
+    seqs = _.map(seqs, seq => parseInt(seq))
+    let {Match} = ctx.models
+    let attributes = ['seq', 'scoreState', 'matchDate']
+    let where = {seq: {$in: seqs}}
+    let order = [['matchDate']]
+    let matches = await Match.findAll({attributes, where, order})
+    let data = {}
+    let ret = []
+    _.forEach(matches, ({seq, scoreState, matchDate}) => {
+      if (!data[matchDate]) {
+        data[matchDate] = []
+      }
+      data[matchDate].push({seq, scoreState})
+    })
+    _.forEach(data, function (v, k) {
+      if (v.length === seqs.length) {
+        let scoreState
+        if (seqs.length === 2) {
+          scoreState = `${v[0].scoreState}${v[1].scoreState}`
+        } else {
+          scoreState = `${v[0].scoreState}${v[1].scoreState}${v[2].scoreState}`
+        }
+        ret.push({scoreState, matchDate: k})
+      }
+    })
+    ctx.body = simulator.executeRanges(ret, 'oddsRange', target)
+  },
+
   /**
    * 计算间隔
    * @param ctx
    * @returns {Promise.<void>}
    */
   async executeRange(ctx){
-    let {quota, target, seq, startDate, endDate} = ctx.query
+    let {quota, target, seq, startDate, endDate, week} = ctx.query
     ctx.assert(seq, 400, 'invalid seq')
     let {Match} = ctx.models
     let where = {seq}
@@ -68,6 +99,9 @@ module.exports = {
     }
     if (endDate) {
       where.endDate = {$lte: endDate}
+    }
+    if (week) {
+      where.week = week
     }
     let order = [['matchDate']]
     let matches = await Match.findAll({where, order})

@@ -3,6 +3,9 @@
  */
 const _ = require('lodash')
 const quotas = require('./quotas')
+const matchMapper = new Map()
+let START_MONEY = 100
+let MAX_FOLLEW = 5
 
 module.exports = {
 
@@ -61,6 +64,38 @@ module.exports = {
       ranges[1] = 'x'
     }
     return ranges
-  }
+  },
 
+  simToken(matches, matchDate){
+    let top10 = matches.splice(0, 10)
+    let total = executeTotalMoney(top10)
+    _.forEach(top10, match => {
+      let {seq, scoreState} = match
+      let key = `seq_${seq}`
+      let isOk = scoreState === '奇'
+      let times = matchMapper.get(key)
+      // 如果中了
+      if (isOk) {
+
+      } else {
+
+      }
+    })
+  }
 }
+
+function executeTotalMoney (matches) {
+  let totalMoney = 0
+  _.forEach(matches, match => {
+    let {seq} = match
+    let key = `seq_${seq}`
+    if (matchMapper.has(key)) {
+      let times = matchMapper.get(key)
+      totalMoney += START_MONEY * (2 << (times - 1 ))
+    } else {
+      totalMoney += START_MONEY
+    }
+  })
+  return totalMoney
+}
+

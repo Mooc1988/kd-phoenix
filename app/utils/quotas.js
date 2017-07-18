@@ -23,6 +23,26 @@ module.exports = {
   allScore: ({pScore, gScore}, target) => {
     let isAll = pScore > 0 && gScore > 0
     return target === '是' ? isAll : !isAll
+  },
+
+  doubleThree: ({sfResult, rqResult}, target) => {
+    return sfResult === 0 && rqResult === 0
+  },
+
+  oddsRange: ({scoreState}, target) => {
+    if (target === '不同') {
+      return scoreState === '奇偶' || scoreState === '偶奇'
+    }
+    if (target === '相同') {
+      return scoreState === '奇奇' || scoreState === '偶偶'
+    }
+    if (target === '不同3') {
+      return scoreState !== '奇奇奇' && scoreState !== '偶偶偶'
+    }
+    if (target === '相同3') {
+      return scoreState === '奇奇奇' || scoreState === '偶偶偶'
+    }
+    return scoreState === target
   }
 
 }

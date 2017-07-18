@@ -34,6 +34,11 @@ module.exports = {
       path: '/curlCaiqr',
       method: 'POST',
       handler: 'Match.curlCaiqr'
+    },
+    {
+      path: '/oddsRange',
+      method: 'GET',
+      handler: 'Match.oddsRange'
     }
   ]
 }

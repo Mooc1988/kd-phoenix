@@ -6,6 +6,16 @@ module.exports = {
 
   scoreState: ({scoreState}, target) => scoreState === target,
 
+  tieScoreState: ({scoreState, pScore, gScore}, target) => {
+    if (target === '平偶') {
+      return scoreState === '偶' && pScore === gScore
+    }
+    if (target === '非平偶') {
+      return scoreState === '偶' && pScore !== gScore
+    }
+    return false
+  },
+
   sfOddsHl: ({sfOddsHl}, target) => sfOddsHl === target,
 
   rqOddsHl: ({rqOddsHl}, target) => rqOddsHl === target,

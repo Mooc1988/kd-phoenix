@@ -77,6 +77,10 @@ module.exports = {
         ret.push({scoreState, matchDate: k})
       }
     })
+    let oj = simulator.executeRanges(ret, 'oddsRange', '偶奇')
+    let jo = simulator.executeRanges(ret, 'oddsRange', '奇偶')
+    let oo = simulator.executeRanges(ret, 'oddsRange', '偶偶')
+    let jj = simulator.executeRanges(ret, 'oddsRange', '奇奇')
     let same = simulator.executeRanges(ret, 'oddsRange', '相同')
     let notSame = simulator.executeRanges(ret, 'oddsRange', '不同')
     let sizeSame = _.size(same.ranges)
@@ -84,8 +88,12 @@ module.exports = {
     if (sizeSame > 3 && sizeNotSame > 3) {
       same = executeRanges(same)
       notSame = executeRanges(notSame)
+      jo = executeRanges(jo)
+      oj = executeRanges(oj)
+      jj = executeRanges(jj)
+      oo = executeRanges(oo)
     }
-    ctx.body = {same, notSame}
+    ctx.body = {same, notSame, oj, jo, oo, jj}
   },
 
   async oddsRange(ctx){
@@ -204,7 +212,6 @@ module.exports = {
         matchResult = '0'
       }
       let isOk = tmp.includes(matchResult)
-      console.log(match_id, matchResult, tmp, isOk)
       let ret = {uid: match_id, seq: match_sn, isHit: isOk}
       matches.push(ret)
     }

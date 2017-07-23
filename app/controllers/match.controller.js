@@ -227,7 +227,7 @@ function executeRanges (data) {
   let {growing, ranges} = data
   let newRanges = _.takeRight(ranges, 2)
   if (!growing) {
-    newRanges[1] = 'x'
+    newRanges.push('x')
   }
   return newRanges
 }

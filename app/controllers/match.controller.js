@@ -5,6 +5,7 @@
 const _ = require('lodash')
 const moment = require('moment')
 const simulator = require('../utils/simulator')
+const num = require('../utils/num')
 
 module.exports = {
   async findAll(ctx){
@@ -51,6 +52,40 @@ module.exports = {
       res.push(match)
     })
     ctx.body = matches
+  },
+
+  async seqPairOddsRange(ctx){
+    let seqs = ctx.query['seqs[]']
+    seqs = _.map(seqs, seq => parseInt(seq))
+    let towMonthBefore = moment().subtract('2', 'M').toDate()
+    let {Match} = ctx.models
+    let attributes = ['seq', 'scoreState', 'matchDate']
+    let where = {seq: {$in: seqs}, matchDate: {$gte: towMonthBefore}}
+    let order = [['seq'], ['matchDate']]
+    let matches = await Match.findAll({attributes, where, order})
+    let data = {}
+    let ret = []
+    _.forEach(matches, ({seq, scoreState, matchDate}) => {
+      if (!data[matchDate]) {
+        data[matchDate] = []
+      }
+      data[matchDate].push({seq, scoreState})
+    })
+    _.forEach(data, function (v, k) {
+      if (_.size(v) === 2) {
+        let scoreState = `${v[0].scoreState}${v[1].scoreState}`
+        ret.push({scoreState, matchDate: k})
+      }
+    })
+    let same = simulator.executeRanges(ret, 'oddsRange', '相同')
+    let notSame = simulator.executeRanges(ret, 'oddsRange', '不同')
+    let sizeSame = _.size(same.ranges)
+    let sizeNotSame = _.size(notSame.ranges)
+    if (sizeSame > 3 && sizeNotSame > 3) {
+      same = executeRanges(same)
+      notSame = executeRanges(notSame)
+    }
+    ctx.body = {same, notSame}
   },
 
   async oddsRange(ctx){
@@ -179,5 +214,13 @@ module.exports = {
     }
     ctx.body = 'ok'
   }
+}
 
+function executeRanges (data) {
+  let {growing, ranges} = data
+  let newRanges = _.takeRight(ranges, 2)
+  if (!growing) {
+    newRanges[1] = 'x'
+  }
+  return newRanges
 }

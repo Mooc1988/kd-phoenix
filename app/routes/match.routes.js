@@ -39,6 +39,11 @@ module.exports = {
       path: '/oddsRange',
       method: 'GET',
       handler: 'Match.oddsRange'
+    },
+    {
+      path: '/seqPairOddsRange',
+      method: 'GET',
+      handler: 'Match.seqPairOddsRange'
     }
   ]
 }

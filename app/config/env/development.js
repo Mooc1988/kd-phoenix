@@ -4,7 +4,7 @@
 
 module.exports = {
   host: 'localhost',
-  port: process.env.NODE_PORT || 4000,
+  port: process.env.NODE_PORT || 3000,
   db: {
     database: 'db-zucai',
     username: 'frank',
@@ -14,16 +14,6 @@ module.exports = {
       dialect: 'postgres'
     }
   },
-  // db: {
-  //   database: 'db-zucai',
-  //   username: 'mooc1988',
-  //   password: 'Mooc1988',
-  //   config: {
-  //     host: "rdsfom58rh8q9mrl8885o.pg.rds.aliyuncs.com",
-  //     port: 3433,
-  //     dialect: 'postgres'
-  //   }
-  // },
   redisConfig: {
     host: 'localhost'
   }

@@ -16,6 +16,8 @@ module.exports = {
     return false
   },
 
+  sfAndRqH: ({sfOddsHl, rqOddsHl}, target) => sfOddsHl === 'H' || rqOddsHl === 'H',
+
   sfOddsHl: ({sfOddsHl}, target) => sfOddsHl === target,
 
   rqOddsHl: ({rqOddsHl}, target) => rqOddsHl === target,
